@@ -58,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build Docker Image with SHA Tag
+      - name: Build Docker Image
         working-directory: ./starter/backend
         run: docker build --tag backend:${{ github.sha }} .
 
@@ -68,8 +68,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Set up Kustomize & Apply Manifests
         working-directory: ./starter/backend/k8s
         run: |
-          kustomize edit set image backend=<ECR_REPO_URL>:${{ github.sha }}
+          kustomize edit set image backend=<YOUR_BACKEND_ECR_URI>:${{ github.sha }}
           kustomize build | kubectl apply -f -
