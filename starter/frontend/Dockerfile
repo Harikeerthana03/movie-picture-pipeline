@@ -1,24 +1,23 @@
-FROM  public.ecr.aws/docker/library/node:18.14.2-alpine3.17
-
-ARG REACT_APP_MOVIE_API_URL
-ENV REACT_APP_MOVIE_API_URL=${REACT_APP_MOVIE_API_URL}
+FROM public.ecr.aws/docker/library/node:18.14.2-alpine3.17
 
 WORKDIR /app
 
-# Copy dependdency files
+# Copy dependency files
 COPY package*.json ./
 
-# Install packages
+# Install dependencies
 RUN npm ci
 
-# Copy code
+# Copy application code
 COPY . .
 
-# Build the app
+# Build the application
+ARG REACT_APP_MOVIE_API_URL
+ENV REACT_APP_MOVIE_API_URL=${REACT_APP_MOVIE_API_URL}
 RUN npm run build
 
-# Expose the port used by the React app
+# Expose port
 EXPOSE 3000
 
-# Start the React app when the container starts
+# Start application
 CMD ["npm", "run", "serve"]
