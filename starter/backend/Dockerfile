@@ -17,8 +17,8 @@ RUN apk update && \
 RUN mkdir -p /var/www/app && mkdir /app
 
 COPY Pipfile* /app
-RUN cd /app && pipenv install --system
+RUN cd /app && pipenv install --system --skip-lock
 
 COPY . /app
 
-CMD uwsgi --http :5000 --master --enable-threads -s /var/www/app/app.sock --manage-script-name --mount /=app:app
+CMD ["python", "-m", "movies"]
