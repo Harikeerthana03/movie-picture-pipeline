@@ -57,5 +57,5 @@ jobs:
       - name: Set up Kustomize & Apply Manifests
         working-directory: ./starter/frontend/k8s
         run: |
-          kustomize edit set image frontend=<YOUR_FRONTEND_ECR_URI>:${{ github.sha }}
+          kustomize edit set image frontend=252179334857.dkr.ecr.us-east-1.amazonaws.com/mp-frontend:${{ github.sha }}
           kustomize build | kubectl apply -f -
