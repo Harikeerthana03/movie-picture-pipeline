@@ -2,72 +2,62 @@ name: Backend CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - 'starter/backend/**'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
-          cache: 'pip'
+          python-version: '3.10'
 
-      - name: Install dependencies
-        working-directory: ./backend
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8
+      - name: Install Pipenv
+        run: pip install pipenv
 
-      - name: Run linter
-        working-directory: ./backend
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings.
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Install Dependencies
+        working-directory: ./starter/backend
+        run: pipenv install --dev
+
+      - name: Run Linter
+        working-directory: ./starter/backend
+        run: pipenv run lint
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
-          cache: 'pip'
+          python-version: '3.10'
 
-      - name: Install dependencies
-        working-directory: ./backend
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install Pipenv
+        run: pip install pipenv
 
-      - name: Run tests
-        working-directory: ./backend
-        run: |
-          pytest
+      - name: Install Dependencies
+        working-directory: ./starter/backend
+        run: pipenv install --dev
+
+      - name: Run Tests
+        working-directory: ./starter/backend
+        run: pipenv run test
 
   build:
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend
-          push: false
-          tags: backend:latest
+      - name: Build Docker Image
+        working-directory: ./starter/backend
+        run: docker build --tag mp-backend:latest .
