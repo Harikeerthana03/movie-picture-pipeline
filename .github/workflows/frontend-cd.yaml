@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -46,5 +49,5 @@ jobs:
           ECR_REPOSITORY: mp-frontend
 
         run: |
-          docker tag mp-frontend:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest 
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./starter/frontend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
