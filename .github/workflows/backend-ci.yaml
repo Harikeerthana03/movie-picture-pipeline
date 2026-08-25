@@ -22,17 +22,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           cd starter/backend
+          pip install --upgrade pip
           pip install pipenv
+          pipenv --python $(which python)
           pipenv install --dev
 
       - name: Run linter
         run: |
-          cd backend
+          cd starter/backend
           pipenv run flake8
 
   test:
@@ -44,12 +46,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           cd starter/backend
+          pip install --upgrade pip
           pip install pipenv
+          pipenv --python $(which python)
           pipenv install --dev
 
       - name: Run tests
