@@ -24,10 +24,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
-
-      - name: Build application
-        working-directory: ./frontend
-        run: npm run build
+      - name: Install dependencies and build
+        run: |
+          cd frontend
+          npm ci
+          npm run build
