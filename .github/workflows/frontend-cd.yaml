@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'frontend/**'
+      - 'starter/frontend/**'
       - '.github/workflows/frontend-cd.yaml'
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t mp-frontend ./frontend
+          docker build -t mp-frontend ./starter/frontend
 
   deploy:
     needs: build
