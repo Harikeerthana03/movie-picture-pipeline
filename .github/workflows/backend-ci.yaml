@@ -4,12 +4,12 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'backend/**'
+      - 'starter/backend/**'
       - '.github/workflows/backend-ci.yaml'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'backend/**'
+      - 'starter/backend/**'
       - '.github/workflows/backend-ci.yaml'
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd starter/backend
           pip install pipenv
           pipenv install --dev
 
@@ -48,11 +48,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd starter/backend
           pip install pipenv
           pipenv install --dev
 
       - name: Run tests
         run: |
-          cd backend
+          cd starter/backend
           pipenv run pytest
